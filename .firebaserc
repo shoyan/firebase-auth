@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "default": "fir-auth-44b74",
+    "staging": "fir-auth-44b74"
+  }
+}
