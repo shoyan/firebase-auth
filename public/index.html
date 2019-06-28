@@ -4,7 +4,6 @@
 <head>
   <meta charset="UTF-8">
   <title>FirebaseUI Auth Demo</title>
-  <script src="common.js"></script>
   <link href="style.css" rel="stylesheet" type="text/css" media="screen" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
@@ -35,6 +34,7 @@
         displayName.textContent = 'こんにちは ' + user.displayName + 'さん';
       }
     });
+
     var AuthUI = {
       init: function(){
         AuthUI.provider = new firebase.auth.GoogleAuthProvider();
@@ -50,7 +50,6 @@
           if (result.credential) {
             // This gives you a Google Access Token. You can use it to access the Google API.
             var token = result.credential.accessToken;
-            alert(result.user.uid)
           }
           if(result.user){
             AuthUI.data.authed = true;
