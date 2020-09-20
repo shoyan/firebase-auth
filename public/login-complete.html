@@ -40,20 +40,21 @@
         var providerData = user.providerData;
         console.log(displayName, email, emailVerified, photoURL, isAnonymous, uid, providerData)
 
+        // ユーザー名の表示
         const username = document.querySelector('#username');
         username.textContent = displayName;
-        // ...
 
+        // メールの認証をしていないときは認証メールを送信する
         if (!emailVerified) {
           var actionCodeSettings = {
-            url: 'https://127.0.0.1:5500/public/?email=' + firebase.auth().currentUser.email,
+            url: 'http://127.0.0.1:5500/public/login-complete.html',
             handleCodeInApp: false,
           };
-          console.log(actionCodeSettings)
+          // 認証メールを送信する
           firebase.auth().currentUser.sendEmailVerification(actionCodeSettings)
             .then(function() {
-              console.log('send ok')
               // Verification email sent.
+              console.log('send ok')
             })
             .catch(function(error) {
               // Error occurred. Inspect error.code.
