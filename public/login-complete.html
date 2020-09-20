@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
+  </head>
+  <body>
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/7.21.0/firebase-app.js"></script>
+   <!-- Add Firebase products that you want to use -->
+  <script src="https://www.gstatic.com/firebasejs/7.21.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.21.0/firebase-firestore.js"></script>
+  
+  <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyA4nNbV4vwjTRM0QmsvppzCkVIPdnEq5fs",
+      authDomain: "fir-auth-44b74.firebaseapp.com",
+      databaseURL: "https://fir-auth-44b74.firebaseio.com",
+      projectId: "fir-auth-44b74",
+      storageBucket: "fir-auth-44b74.appspot.com",
+      messagingSenderId: "128882623764",
+      appId: "1:128882623764:web:f7bcb0b46c78c63b"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        // User is signed in.
+        var displayName = user.displayName;
+        var email = user.email;
+        var emailVerified = user.emailVerified;
+        var photoURL = user.photoURL;
+        var isAnonymous = user.isAnonymous;
+        var uid = user.uid;
+        var providerData = user.providerData;
+        console.log(displayName, email, emailVerified, photoURL, isAnonymous, uid, providerData)
+
+        const username = document.querySelector('#username');
+        username.textContent = displayName;
+        // ...
+
+        if (!emailVerified) {
+          var actionCodeSettings = {
+            url: 'https://127.0.0.1:5500/public/?email=' + firebase.auth().currentUser.email,
+            handleCodeInApp: false,
+          };
+          console.log(actionCodeSettings)
+          firebase.auth().currentUser.sendEmailVerification(actionCodeSettings)
+            .then(function() {
+              console.log('send ok')
+              // Verification email sent.
+            })
+            .catch(function(error) {
+              // Error occurred. Inspect error.code.
+            });
+          }
+      } else {
+        // User is signed out.
+        // ...
+      }
+    });
+  </script>
+  <h1>ログイン完了画面</h1>
+  <p>こんにちは！<span id="username"></span>さん！</p>
+  <a href="/public/logout.html">ログアウト</a>
+  </body>
+</html>
