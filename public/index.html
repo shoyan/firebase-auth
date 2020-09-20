@@ -1,99 +1,76 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
+  </head>
+  <body>
+<h1>Welcome to My Awesome App</h1>
+<div id="firebaseui-auth-container"></div>
+<div id="loader">Loading...</div>
 
-<head>
-  <meta charset="UTF-8">
-  <title>FirebaseUI Auth Demo</title>
-  <link href="style.css" rel="stylesheet" type="text/css" media="screen" />
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-</head>
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.21.0/firebase-app.js"></script>
+ <!-- Add Firebase products that you want to use -->
+<script src="https://www.gstatic.com/firebasejs/7.21.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.21.0/firebase-firestore.js"></script>
 
-<body>
-  <div id="container">
-    <h3>FirebaseUI Demo</h3>
-    <button class="authBtn"></button>
-    <span class="userId"></span>
-
-    <!-- The core Firebase JS SDK is always required and must be listed first -->
-    <script src="/__/firebase/6.2.3/firebase-app.js"></script>
-
-    <!-- TODO: Add SDKs for Firebase products that you want to use
-     https://firebase.google.com/docs/web/setup#reserved-urls -->
-    <script src="/__/firebase/6.1.1/firebase-auth.js"></script>
-
-    <!-- Initialize Firebase -->
-    <script src="/__/firebase/init.js"></script>
-
-    <script>
-
-    var AuthUI = {
-      init: function(){
-        firebase.auth().languageCode = 'jp';
-        AuthUI.provider = new firebase.auth.GoogleAuthProvider();
-        AuthUI.provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
-        AuthUI.elAuthBtn = document.querySelector('.authBtn');
-        AuthUI.elUserId = document.querySelector('.userId');
-        AuthUI.elAuthBtn.addEventListener('click', function(){
-          AuthUI.doAuth();
-        });
-
-        firebase.auth().onAuthStateChanged(function(user) {
-          if (user) {
-            AuthUI.data.authed = true;
-            AuthUI.data.userId= user.email;
-          }
-          AuthUI.draw();
-        });
-
-        firebase.auth().getRedirectResult().then(function(result) {
-          AuthUI.elAuthBtn.disabled = false;
-          if (result.credential) {
-            // This gives you a Google Access Token. You can use it to access the Google API.
-            var token = result.credential.accessToken;
-          }
-          if(result.user){
-            AuthUI.data.authed = true;
-            AuthUI.data.userId = result.user.email;
-            AuthUI.draw();
-          }
-        }).catch(function(error) {
-          // Handle Errors here.
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          // The email of the user's account used.
-          var email = error.email;
-          // The firebase.auth.AuthCredential type that was used.
-          var credential = error.credential;
-          // ...
-        });
-      },
-      data: {
-        authed: false,
-        userId: '',
-        info: ''
-      },
-      draw: function(){
-        AuthUI.elAuthBtn.textContent = AuthUI.data.authed ? 'LOGOUT' : 'LOGIN';
-        AuthUI.elUserId.textContent = AuthUI.data.userId;
-      },
-      doAuth: function(){
-        if(AuthUI.data.authed){
-          firebase.auth().signOut().then(function() {
-            AuthUI.data.authed = false;
-            AuthUI.data.userId = '';
-            AuthUI.draw();
-          }, function(error) {
-            // An error happened.
-          });
-        }
-        else {
-          firebase.auth().signInWithRedirect(AuthUI.provider);
-        }
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyA4nNbV4vwjTRM0QmsvppzCkVIPdnEq5fs",
+    authDomain: "fir-auth-44b74.firebaseapp.com",
+    databaseURL: "https://fir-auth-44b74.firebaseio.com",
+    projectId: "fir-auth-44b74",
+    storageBucket: "fir-auth-44b74.appspot.com",
+    messagingSenderId: "128882623764",
+    appId: "1:128882623764:web:f7bcb0b46c78c63b"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  // Initialize the FirebaseUI Widget using Firebase.
+  var ui = new firebaseui.auth.AuthUI(firebase.auth());
+  ui.start('#firebaseui-auth-container', {
+    signInOptions: [
+      {
+        provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
+        requireDisplayName: false,
       }
-    };
-    AuthUI.init();
-    </script>
-
-</body>
-
+    ],
+    // Other config options...
+  });
+var uiConfig = {
+  callbacks: {
+    signInSuccessWithAuthResult: function(authResult, redirectUrl) {
+      // User successfully signed in.
+      // Return type determines whether we continue the redirect automatically
+      // or whether we leave that to developer to handle.
+      return true;
+    },
+    uiShown: function() {
+      // The widget is rendered.
+      // Hide the loader.
+      document.getElementById('loader').style.display = 'none';
+    }
+  },
+  // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
+  signInFlow: 'popup',
+  signInSuccessUrl: '/public/login-complete.html',
+  signInOptions: [
+    // Leave the lines as is for the providers you want to offer your users.
+    firebase.auth.EmailAuthProvider.PROVIDER_ID,
+  ],
+  // Terms of service url.
+  tosUrl: 'https://github.com/shoyan',
+  // Privacy policy url.
+  privacyPolicyUrl: 'https://github.com/shoyan'
+};
+// レンダリング
+ui.start('#firebaseui-auth-container', uiConfig);
+  </script>
+  </body>
 </html>
