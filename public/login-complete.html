@@ -7,6 +7,11 @@
     <title>Document</title>
     <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
     <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
+    <style>
+      .hide-box {
+        display: none;
+      }
+    </style>
   </head>
   <body>
   <!-- The core Firebase JS SDK is always required and must be listed first -->
@@ -44,6 +49,10 @@
         const username = document.querySelector('#username');
         username.textContent = displayName;
 
+        // コンテンツを表示
+        const box = document.querySelector('.hide-box');
+        box.style.display = 'block';
+
         // メールの認証をしていないときは認証メールを送信する
         if (!emailVerified) {
           var actionCodeSettings = {
@@ -61,13 +70,15 @@
             });
           }
       } else {
-        // User is signed out.
-        // ...
+        location.href = "/public/index.html";
       }
     });
   </script>
-  <h1>ログイン完了画面</h1>
-  <p>こんにちは！<span id="username"></span>さん！</p>
-  <a href="/public/logout.html">ログアウト</a>
+
+  <div class="hide-box">
+    <h1>ログイン完了画面</h1>
+    <p>こんにちは！<span id="username"></span>さん！</p>
+    <a href="/public/logout.html">ログアウト</a>
+    </div>
   </body>
 </html>
